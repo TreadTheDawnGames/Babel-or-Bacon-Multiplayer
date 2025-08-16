@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://o1lfvb5hnx3f"]
+
+[node name="BasePlacableRigid" type="RigidBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]

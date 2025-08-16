@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://cucvnpr1xfr62"]
+
+[ext_resource type="Script" uid="uid://b4bpy0lvl2wxu" path="res://Scripts/Player/RufusCardBoard.gd" id="1_egawd"]
+[ext_resource type="Script" uid="uid://b6sx7ipqslu7a" path="res://Scripts/TDCards/card_goto_marker.gd" id="2_jkgca"]
+[ext_resource type="Script" uid="uid://oxfwwo7wfsu4" path="res://Scripts/TDCards/card_play_area.gd" id="3_3pcd6"]
+[ext_resource type="PackedScene" uid="uid://b0t5kh500k8je" path="res://Scenes/UI/card.tscn" id="4_374m0"]
+[ext_resource type="PackedScene" uid="uid://dyo4b07qyoqot" path="res://Scenes/PlacableRigids/Objects/crate.tscn" id="5_egawd"]
+[ext_resource type="Script" uid="uid://b85v7ihdo7yol" path="res://Scripts/CardData/placable_object_card_data.gd" id="6_7mpbo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_374m0"]
+size = Vector2(1762, 677)
+
+[sub_resource type="Resource" id="Resource_yds2l"]
+script = ExtResource("6_7mpbo")
+OBJ_SCENE = ExtResource("5_egawd")
+metadata/_custom_type_script = "uid://b85v7ihdo7yol"
+
+[sub_resource type="Resource" id="Resource_7ing4"]
+script = ExtResource("6_7mpbo")
+OBJ_SCENE = ExtResource("5_egawd")
+metadata/_custom_type_script = "uid://b85v7ihdo7yol"
+
+[node name="CardBoard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_egawd")
+
+[node name="Hand" type="Node2D" parent="."]
+position = Vector2(900, 60)
+
+[node name="TDCardPositionMarker2D" type="Marker2D" parent="Hand"]
+position = Vector2(-344, 0)
+script = ExtResource("2_jkgca")
+metadata/_custom_type_script = "uid://b6sx7ipqslu7a"
+
+[node name="TDCardPositionMarker2D2" type="Marker2D" parent="Hand"]
+position = Vector2(-172, 0)
+script = ExtResource("2_jkgca")
+metadata/_custom_type_script = "uid://b6sx7ipqslu7a"
+
+[node name="TDCardPositionMarker2D3" type="Marker2D" parent="Hand"]
+script = ExtResource("2_jkgca")
+metadata/_custom_type_script = "uid://b6sx7ipqslu7a"
+
+[node name="TDCardPositionMarker2D4" type="Marker2D" parent="Hand"]
+position = Vector2(172, 0)
+script = ExtResource("2_jkgca")
+metadata/_custom_type_script = "uid://b6sx7ipqslu7a"
+
+[node name="TDCardPositionMarker2D5" type="Marker2D" parent="Hand"]
+position = Vector2(344, 0)
+script = ExtResource("2_jkgca")
+metadata/_custom_type_script = "uid://b6sx7ipqslu7a"
+
+[node name="TDCardPlayArea" type="Area2D" parent="."]
+position = Vector2(960, 540)
+script = ExtResource("3_3pcd6")
+_PlayType = "activate"
+metadata/_custom_type_script = "uid://oxfwwo7wfsu4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TDCardPlayArea"]
+position = Vector2(0, 94.5)
+shape = SubResource("RectangleShape2D_374m0")
+
+[node name="CardBase" parent="." node_paths=PackedStringArray("LocationMarker") instance=ExtResource("4_374m0")]
+position = Vector2(1064, 60)
+LocationMarker = NodePath("../Hand/TDCardPositionMarker2D")
+Data = SubResource("Resource_yds2l")
+
+[node name="CardBase2" parent="." node_paths=PackedStringArray("LocationMarker") instance=ExtResource("4_374m0")]
+position = Vector2(726, 55)
+LocationMarker = NodePath("../Hand/TDCardPositionMarker2D2")
+Data = SubResource("Resource_7ing4")

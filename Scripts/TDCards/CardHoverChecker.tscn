@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bi8avrb021irh"]
+
+[ext_resource type="Script" uid="uid://chevvhy608w4i" path="res://scripts/cards/card_hover_checker.gd" id="1_v8gq6"]
+
+[node name="CardHoverChecker" type="Node2D"]
+script = ExtResource("1_v8gq6")

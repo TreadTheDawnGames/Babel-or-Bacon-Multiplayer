@@ -1,0 +1,227 @@
+[gd_scene load_steps=25 format=3 uid="uid://b5qtaojl1eweb"]
+
+[ext_resource type="Script" uid="uid://b2xifo5l8edkp" path="res://Scripts/Player/rufus.gd" id="1_uhqbe"]
+[ext_resource type="Script" uid="uid://ds07w4angr4si" path="res://Scripts/multiplayer/physics_synchronizer.gd" id="2_38qne"]
+[ext_resource type="Texture2D" uid="uid://df44ha7ckulwq" path="res://Assets/Sprites/Rufus/PigCarry1.png" id="2_hg50a"]
+[ext_resource type="Script" uid="uid://deqpbr5unynqa" path="res://Scripts/multiplayer/multiplayer_input.gd" id="2_l8r2c"]
+[ext_resource type="Texture2D" uid="uid://bsaaq2ecu420j" path="res://Assets/Sprites/Rufus/PigMove1.png" id="3_uji0u"]
+[ext_resource type="Texture2D" uid="uid://624a3o27d0km" path="res://Assets/Sprites/Rufus/PigCarry2.png" id="3_vcqyi"]
+[ext_resource type="Texture2D" uid="uid://br3yqebuby3qp" path="res://Assets/Sprites/Rufus/PigCarry3.png" id="4_40dvk"]
+[ext_resource type="Texture2D" uid="uid://drlkeyxerdqqn" path="res://Assets/Sprites/Rufus/PigMove2.png" id="4_bcbia"]
+[ext_resource type="Texture2D" uid="uid://fs7ywjhkqwwu" path="res://Assets/Sprites/Rufus/PigMove3.png" id="5_h7axm"]
+[ext_resource type="Texture2D" uid="uid://cfnm6k1i1ls6x" path="res://Assets/Sprites/Rufus/PigCarry4.png" id="5_m30l3"]
+[ext_resource type="Texture2D" uid="uid://cmyq31hw4mqhk" path="res://Assets/Sprites/Rufus/PigMove4.png" id="6_dg0j7"]
+[ext_resource type="Texture2D" uid="uid://cvi7cn148uom3" path="res://Assets/Sprites/ShiftyThoughts/ShiftyThoughts1.png" id="10_vct6h"]
+[ext_resource type="Texture2D" uid="uid://b62vkvh10liyu" path="res://Assets/Sprites/ShiftyThoughts/ShiftyThoughts2.png" id="11_3x4u7"]
+[ext_resource type="Texture2D" uid="uid://cq2giure16pj8" path="res://Assets/Sprites/ShiftyThoughts/ShiftyThoughts3.png" id="12_hromj"]
+[ext_resource type="Texture2D" uid="uid://wu7jyana6dpi" path="res://Assets/Sprites/ShiftyThoughts/ShiftyThoughts4.png" id="13_w0vdl"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_uhqbe"]
+friction = 0.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_l8r2c"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:modulate")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:jc1")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:jc2")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:anim_velo")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("PlayerSynchronizer:sync_pos")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("PlayerSynchronizer:sync_lvel")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("PlayerSynchronizer:sync_avel")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath("PlayerSynchronizer:sync_rot")
+properties/8/spawn = true
+properties/8/replication_mode = 1
+properties/9/path = NodePath("PlayerSynchronizer:sync_frame")
+properties/9/spawn = true
+properties/9/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uhqbe"]
+properties/0/path = NodePath("InputSyncronizer:end_jump")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("InputSyncronizer:start_jump")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("InputSyncronizer:move_left")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("InputSyncronizer:move_right")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("InputSyncronizer:is_interact")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("InputSyncronizer:rotate_left")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("InputSyncronizer:rotate_right")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("InputSyncronizer:open_shop")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bqtgq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hg50a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_vcqyi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_40dvk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_m30l3")
+}],
+"loop": true,
+"name": &"carry",
+"speed": 0.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_uji0u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bcbia")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_h7axm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_dg0j7")
+}],
+"loop": true,
+"name": &"normal",
+"speed": 0.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qvtxl"]
+radius = 30.0
+height = 100.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l8r2c"]
+radius = 4.0
+height = 60.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_38qne"]
+size = Vector2(60, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jinw8"]
+atlas = ExtResource("10_vct6h")
+region = Rect2(0, 0, 316, 270)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w28bs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jinw8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_3x4u7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_hromj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_w0vdl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_3x4u7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_w0vdl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vct6h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_hromj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vct6h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_w0vdl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[node name="Rufus" type="RigidBody2D"]
+process_mode = 1
+collision_layer = 35
+collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_uhqbe")
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1_uhqbe")
+airspd = 4000.0
+grndspd = 11110.0
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_l8r2c")
+script = ExtResource("2_38qne")
+
+[node name="InputSyncronizer" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_uhqbe")
+script = ExtResource("2_l8r2c")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -3)
+sprite_frames = SubResource("SpriteFrames_bqtgq")
+animation = &"normal"
+autoplay = "normal"
+centered = false
+offset = Vector2(-50, -60)
+
+[node name="BeanShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_qvtxl")
+
+[node name="StandingShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -46)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_l8r2c")
+
+[node name="HoleFillShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_38qne")
+
+[node name="StepSoundPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -20.07
+
+[node name="PopSoundPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -20.07
+
+[node name="ShiftyThoughts" type="AnimatedSprite2D" parent="."]
+z_index = 2
+position = Vector2(-2, -74)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_w28bs")
+autoplay = "default"
+frame_progress = 0.70973

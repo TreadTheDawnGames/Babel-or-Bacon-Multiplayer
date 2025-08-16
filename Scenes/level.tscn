@@ -1,0 +1,96 @@
+[gd_scene load_steps=8 format=3 uid="uid://degfyer4edaye"]
+
+[ext_resource type="Script" uid="uid://cn5ay3fs25m47" path="res://Scripts/camera_2d.gd" id="1_6phgx"]
+[ext_resource type="Texture2D" uid="uid://32u0l24hx7x1" path="res://Assets/Sprites/UI/Grass.png" id="2_6phgx"]
+[ext_resource type="PackedScene" uid="uid://bnwkvpkk47j1j" path="res://Scenes/UI/ConnectionMenu.tscn" id="3_6phgx"]
+[ext_resource type="PackedScene" uid="uid://cucvnpr1xfr62" path="res://Scenes/UI/cards_manager.tscn" id="4_wqkje"]
+[ext_resource type="PackedScene" uid="uid://dyo4b07qyoqot" path="res://Scenes/PlacableRigids/Objects/crate.tscn" id="5_wqkje"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_81xng"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k5f4k"]
+size = Vector2(4255, 300)
+
+[node name="level" type="Node2D"]
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, -340)
+script = ExtResource("1_6phgx")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Camera2D"]
+replication_config = SubResource("SceneReplicationConfig_81xng")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = -10
+position = Vector2(0, -1000)
+
+[node name="Grass" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(960, 1144)
+texture = ExtResource("2_6phgx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(960, 1150)
+shape = SubResource("RectangleShape2D_k5f4k")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource("3_6phgx")]
+
+[node name="CardBoard" parent="CanvasLayer" instance=ExtResource("4_wqkje")]
+visible = false
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://b5qtaojl1eweb")
+spawn_path = NodePath("../Rufuses")
+
+[node name="Rufuses" type="Node2D" parent="."]
+
+[node name="Crate_PlacableRigid" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(929, -95)
+
+[node name="Crate_PlacableRigid2" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(926, -201)
+
+[node name="Crate_PlacableRigid3" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1066, -84)
+
+[node name="Crate_PlacableRigid4" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1053, -196)
+
+[node name="Crate_PlacableRigid5" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1053, -315)
+
+[node name="Crate_PlacableRigid6" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(789, -79)
+
+[node name="Crate_PlacableRigid7" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1187, -84)
+
+[node name="Crate_PlacableRigid8" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1182, -202)
+
+[node name="Crate_PlacableRigid9" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1185, -321)
+
+[node name="Crate_PlacableRigid10" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1180, -427)
+
+[node name="Crate_PlacableRigid11" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1296, -85)
+
+[node name="Crate_PlacableRigid12" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1286, -203)
+
+[node name="Crate_PlacableRigid13" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1288, -325)
+
+[node name="Crate_PlacableRigid14" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1285, -435)
+
+[node name="Crate_PlacableRigid15" parent="." instance=ExtResource("5_wqkje")]
+position = Vector2(1283, -549)

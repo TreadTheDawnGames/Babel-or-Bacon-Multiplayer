@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://dyo4b07qyoqot"]
+
+[ext_resource type="PackedScene" uid="uid://o1lfvb5hnx3f" path="res://Scenes/PlacableRigids/base_placable_rigid.tscn" id="1_b2pl2"]
+[ext_resource type="Script" uid="uid://bbbs0icyhif7g" path="res://Scripts/placable_object.gd" id="2_1e73s"]
+[ext_resource type="Texture2D" uid="uid://ckwvnujyfbm05" path="res://Assets/Sprites/ObjectIcons/CrateIcon.png" id="2_nb1cv"]
+[ext_resource type="Script" uid="uid://ds07w4angr4si" path="res://Scripts/multiplayer/physics_synchronizer.gd" id="4_1e73s"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b2pl2"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_rot")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("MultiplayerSynchronizer:sync_pos")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("MultiplayerSynchronizer:sync_lvel")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("MultiplayerSynchronizer:sync_avel")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("MultiplayerSynchronizer:sync_frame")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1e73s"]
+size = Vector2(86, 86)
+
+[node name="Crate_PlacableRigid" instance=ExtResource("1_b2pl2")]
+script = ExtResource("2_1e73s")
+icon = ExtResource("2_nb1cv")
+backing_color = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
+replication_config = SubResource("SceneReplicationConfig_b2pl2")
+script = ExtResource("4_1e73s")
+
+[node name="Sprite2D" parent="." index="1"]
+texture = ExtResource("2_nb1cv")
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_1e73s")

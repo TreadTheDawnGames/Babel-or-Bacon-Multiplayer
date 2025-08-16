@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://degfyer4edaye"]
+
+[ext_resource type="Script" uid="uid://cn5ay3fs25m47" path="res://Scripts/camera_2d.gd" id="1_6phgx"]
+[ext_resource type="Script" uid="uid://clkmy6wnf6gne" path="res://Scripts/Globals/game_manager.gd" id="1_81xng"]
+[ext_resource type="Texture2D" uid="uid://32u0l24hx7x1" path="res://Assets/Sprites/UI/Grass.png" id="2_6phgx"]
+[ext_resource type="PackedScene" uid="uid://bnwkvpkk47j1j" path="res://Scenes/UI/ConnectionMenu.tscn" id="3_6phgx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k5f4k"]
+size = Vector2(4255, 300)
+
+[node name="level" type="Node2D"]
+script = ExtResource("1_81xng")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, -340)
+script = ExtResource("1_6phgx")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = -10
+position = Vector2(0, -1000)
+
+[node name="Grass" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(960, 1144)
+texture = ExtResource("2_6phgx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(960, 1150)
+shape = SubResource("RectangleShape2D_k5f4k")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource("3_6phgx")]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://b5qtaojl1eweb")
+spawn_path = NodePath("..")
