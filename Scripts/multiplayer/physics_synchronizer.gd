@@ -34,7 +34,7 @@ func _exit_tree():
 #copy state to array
 func get_state(state : PhysicsDirectBodyState2D ):
 	sync_pos = state.transform.origin
-	sync_rot = state.transform.get_rotation()
+	#sync_rot = state.transform.get_rotation()
 	sync_lvel = state.linear_velocity
 	sync_avel = state.angular_velocity
 
@@ -52,7 +52,7 @@ func get_physics_body_info():
 	# server copy for sync
 	get_state( body_state )
 
-
+@rpc
 func set_physics_body_info():
 	# client rpc set from server
 	var data :Array = ring_buffer.remove()

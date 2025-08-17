@@ -60,3 +60,5 @@ text = "Join"
 layout_mode = 2
 text = "HAPL-MCKF"
 placeholder_text = "Unique Code"
+
+[node name="InternetTimeout" type="Timer" parent="."]

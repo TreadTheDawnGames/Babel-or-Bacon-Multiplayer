@@ -1,6 +1,6 @@
 extends Control
 @onready var host_button: Button = $MainMenu/MarginContainer/VBoxContainer/Host
-@onready var join: Button = $MainMenu/MarginContainer/VBoxContainer/Join
+@onready var join_button: Button = $MainMenu/MarginContainer/VBoxContainer/Join
 
 const PORT = 1692
 var enet_peer = ENetMultiplayerPeer.new()
@@ -17,7 +17,7 @@ var level : Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	host_button.pressed.connect(host_pressed)
-	join.pressed.connect(join_pressed)
+	join_button.pressed.connect(join_pressed)
 	level = get_tree().root.get_node("level")
 	pass # Replace with function body.
 
@@ -49,19 +49,50 @@ func host_pressed():
 	room_code_label.show()
 	add_player(multiplayer.get_unique_id())
 	pass
+@onready var internet_timeout: Timer = $InternetTimeout
+var times_ticked : int = 0
+
+func update_join_label():
+	join_button.text = "Connecting... " + str(30 - times_ticked)
+	times_ticked += 1
 	
-	
+	pass
+
 func join_pressed():
-	main_menu.hide()
-	room_code_label.show()
+	print(enet_peer.get_connection_status())
 	
+	join_button.text = "Connecting... 31"
 	var pre_unhex_code = address.text.to_upper()
 	var address_code = unhexify(pre_unhex_code)
 	
 	@warning_ignore("integer_division")
 	room_code_label.text += "CLIENT - " + pre_unhex_code if pre_unhex_code.contains("-") else pre_unhex_code.insert(pre_unhex_code.length()/2, "-")
 	enet_peer.create_client(address_code, PORT)
+	internet_timeout.timeout.connect(update_join_label)
+	internet_timeout.start()
+	
+	
 	multiplayer.multiplayer_peer = enet_peer
+	multiplayer.connected_to_server.connect(
+		func(): 
+			print("Connected")
+			join_button.text = "Connected!"
+			internet_timeout.stop()
+			get_tree().create_timer(0.5).timeout.connect(hide)
+			)
+	multiplayer.connection_failed.connect(
+		func(): 
+			printerr("Failed to connect")
+			join_button.text = "Failed to Connect. Try again?"
+			internet_timeout.stop()
+			times_ticked = 0
+			
+			)
+	
+	
+	#main_menu.hide()
+	room_code_label.show()
+	
 	
 	pass
 
@@ -130,12 +161,13 @@ func hexify(num : int) -> String:
 				replaced = replaced.replace(str(i), "O")
 			9: 
 				replaced = replaced.replace(str(i), "P")
-	
+	replaced = replaced.replace(" ", "G")
 	return replaced
 
 func unhexify(hex : String) -> String:
 	
 	var replaced : String = hex.replace("-", "")
+	replaced = replaced.replace(" ", "0")
 	for i in 10:
 		match i:
 			0: 
