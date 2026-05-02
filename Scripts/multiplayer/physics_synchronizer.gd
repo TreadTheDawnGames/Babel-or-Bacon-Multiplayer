@@ -24,10 +24,13 @@ enum {
 	QUAT, # the quaternion is used for an optimized rotation state
 }
 
+@onready var base_placable_rigid: PlacableObject = $".."
 
 func _ready():
 	synchronized.connect(_on_synchronized)
-
+	base_placable_rigid.item_placed.connect(get_physics_body_info)
+	#get_physics_body_info()
+	
 func _exit_tree():
 	ring_buffer.free()
 

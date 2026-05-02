@@ -14,9 +14,13 @@ var Rufuses : Array[PlayerCharacter]
 #var moneyLabel : RichTextLabel
 var gameOverInst : Node2D
 var loseHeight : int
-	
-	
+var object_spawner : MultiplayerSpawner
+var object_holder : Node2D
+
+
 func _ready():
+	object_spawner = get_tree().get_first_node_in_group("PlacedObjectSpawner")
+	object_holder = get_tree().get_first_node_in_group("ObjectHolder")
 	#Camera = get_node("Camera2D")
 	#moneyLabel = get_node("Camera/CanvasLayer/Deck/MoneyLabel")
 	#Rufus = get_node("Rufus")
@@ -53,6 +57,13 @@ func _ready():
 	#AddChild(ml)
 	#return ml
 
+@rpc("any_peer", "call_local")
+func add_placable_object(spawn_path : String, spawn_pos_global : Vector2):
+	if(is_multiplayer_authority()):
+		var object_to_spawn : Node2D = load(spawn_path).instantiate()
+		object_to_spawn.global_position = spawn_pos_global
+		object_holder.add_child(object_to_spawn, true)
+	pass
 
 #func TriggerCard(CardPath : String) -> bool:
 	#return Rufus.SpawnObject(CardPath)

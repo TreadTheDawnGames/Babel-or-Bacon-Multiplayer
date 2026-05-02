@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1bs0fei3dl5j"]
+
+[ext_resource type="Texture2D" uid="uid://ccwdhphisddai" path="res://Assets/Sprites/Rufus/PigArm.png" id="1_u3x8i"]
+
+[node name="PigHoldArm" type="Node2D"]
+
+[node name="PigArm" type="Sprite2D" parent="."]
+position = Vector2(0, 15)
+texture = ExtResource("1_u3x8i")

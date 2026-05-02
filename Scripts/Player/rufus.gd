@@ -1,4 +1,5 @@
 #thanks https://www.youtube.com/watch?v=V4a_J38XdHk
+#https://www.youtube.com/watch?v=Sc_pP_nKSL8
 extends RigidBody2D
 class_name PlayerCharacter
 
@@ -13,11 +14,12 @@ var tickerMax : int = 10
 var tickRate : int = 0
 var curFrame : int = 0
 @onready var mySprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var pig_arm: Node2D = $ArmSlot/PigHoldArm
+@onready var arm_slot: Node2D = $ArmSlot
+#@onready var object_spawner: MultiplayerSpawner = $ObjectSpawner
 
 #*heldObject*
 var holding : Node2D = null
-var isHolding : bool = false
-var pigArm : Node2D
 var cam : Camera2D
 var spawn : int
 var coyoteTime : int = 0
@@ -27,7 +29,7 @@ var stepSound : AudioStreamPlayer
 var popSound : AudioStreamPlayer
 var shiftyThought :    AnimatedSprite2D
 var CanMakeLandSound : bool = false
-
+@export var is_holding : bool = false
 #set auth to local
 #func _enter_tree() -> void:
 	#set_multiplayer_authority(str(name).to_int())
@@ -54,6 +56,8 @@ var is_interact : bool = false
 var rotate_left : bool = false
 var rotate_right : bool = false
 var open_shop : bool = false
+var mouse_position : Vector2
+
 @export var anim_velo : float = false
 @export var jc1 : bool = false
 @export var jc2 : bool = false
@@ -65,7 +69,7 @@ var open_shop : bool = false
 		player_id = id
 		%InputSyncronizer.set_multiplayer_authority(id)
 
-func _handle_player_movement():
+func _handle_player_input():
 	end_jump = input_syncronizer.end_jump
 	start_jump = input_syncronizer.start_jump
 	move_left = input_syncronizer.move_left
@@ -74,7 +78,27 @@ func _handle_player_movement():
 	rotate_left = input_syncronizer.rotate_left
 	rotate_right = input_syncronizer.rotate_right
 	open_shop = input_syncronizer.open_shop
+	mouse_position = input_syncronizer.mouse_position
 
+func _physics_process(_delta: float) -> void:
+	
+	_handle_player_input()
+	
+	if(multiplayer.is_server()):
+		_handle_physics()
+		jc1 = move_and_collide(Vector2(0,1), true) == null
+		jc2 = move_and_collide(Vector2(0,6), true) == null
+		anim_velo = linear_velocity.x
+		handle_holding_object()
+	
+	
+	_handle_animation()
+	#if(not multiplayer.is_server()):
+		#print(jc1)
+		#print(jc2)
+		#print(anim_velo)
+	#if(not is_multiplayer_authority()):
+		#return
 
 func _handle_animation():
 	
@@ -109,49 +133,40 @@ func _handle_animation():
 	
 	mySprite.frame = curFrame
 	
-
-func _physics_process(_delta: float) -> void:
-	
-	_handle_player_movement()
-	
-	if(multiplayer.is_server()):
-		_handle_physics()
-		jc1 = move_and_collide(Vector2(0,1), true) == null
-		jc2 = move_and_collide(Vector2(0,6), true) == null
-		anim_velo = linear_velocity.x
-	_handle_animation()
-	#if(not multiplayer.is_server()):
-		#print(jc1)
-		#print(jc2)
-		#print(anim_velo)
-	#if(not is_multiplayer_authority()):
-		#return
+	if(is_holding):
+		mySprite.animation = "carry"
+		arm_slot.show()
+		
+		if (mouse_position.x > global_position.x):
+		# Set facing sprite
+			mySprite.flip_h = false
+			pig_arm.get_node("PigArm").flip_h = false
+			pig_arm.look_at(mouse_position)
+		
+		if (mouse_position.x < global_position.x):
+			mySprite.flip_h = true
+			pig_arm.get_node("PigArm").flip_h = true
+			pig_arm.look_at(mouse_position)
+			pig_arm.rotation += PI
+	else:
+		mySprite.animation = "normal"
+		arm_slot.hide()
 
 func _handle_physics():
 	var spd = airspd
-	#Move camera
 	var linvel = linear_velocity
-	
-	
-	## Vertical movement dampening
+	## disallow movement if zooming
 	#if (!GameManager.Instance.Camera.Zooming):
 	#
 	if (end_jump):
 		linvel.y = max(linvel.y, minjump)
-	
-	
-	# 
-
-		# Horizontal movement dampening
+	# Horizontal movement dampening
 	linvel.x = clamp(linvel.x, -maxSpd, maxSpd)
 	linvel.x /= 1.25
 	linear_velocity = linvel
 
-
-
 	# Handle animation
 	anim_velo = linvel.x
-
 
 	if (move_and_collide(Vector2(0,5), true) == null):
 		CanMakeLandSound = true
@@ -197,52 +212,36 @@ func _handle_physics():
 		apply_force(Vector2(-spd, 0))
 
 	# Clamp position
-		var pos = position
-		pos.x = clamp(pos.x,0,1920)
-		position = pos
+		global_position.x = clamp(global_position.x,0,1920)
 	
 	#if (Input.IsActionJustPressed("OpenShop"))
 	#	SpawnObject("res:#Scenes/PhysicsCardObjects/gascan.tscn")
 
 	# Holding object
-	if (holding != null):
-		mySprite.Animation = "carry"
-		var rigid : RigidBody2D = holding.get_node("RigidBody2D") as RigidBody2D
-		# Handle pig arm position
-		pigArm.global_position = global_position
+
+func handle_holding_object():
+	if (is_holding):
+		var rigid : RigidBody2D = holding as RigidBody2D
 		# Get direction to mouse
-		var dir = global_position.direction_to(get_global_mouse_position())
-		var mag = holding.GetMeta("HoldOffset")
+		var dir = global_position.direction_to(mouse_position)
+		var mag = holding.hold_offset
 
 			# Set object held position
-		if (get_global_mouse_position().distance_to(global_position) < mag):
-			holding.global_position = get_global_mouse_position()
+		if (mouse_position.distance_to(global_position) < mag):
+			holding.global_position = mouse_position
 		else:
 			holding.global_position = Vector2(
 				global_position.x + dir.x * mag,
 				global_position.y + dir.y * mag
 			)
-		# Set facing sprite
-		if (get_global_mouse_position().x > global_position.x):
-		
-			mySprite.FlipH = false
-			pigArm.get_node("PigArm").FlipH = false
-			pigArm.LookAt(get_global_mouse_position())
-		
-		if (get_global_mouse_position().x < global_position.x):
-		
-			mySprite.FlipH = true
-			pigArm.get_node("PigArm").FlipH = true
-			pigArm.LookAt(get_global_mouse_position())
-			pigArm.Rotation += PI
 		
 		# Rotate held object
 		if (rotate_left):
-			holding.rotate((float)(-2/(180/PI)))
+			holding.rotate(-2/(180/PI))
 		if (rotate_right):
-			holding.rotate((float)(2/(180/PI)))
-		rigid.SetCollisionMaskValue(3, true)
-		#rigid.SetCollisionMaskValue(4, true)
+			holding.rotate(2/(180/PI))
+		rigid.set_collision_mask_value(3, true)
+		#rigid.set_collision_mask_value(4, true)
 		if (rigid.move_and_collide(Vector2(0,.1), true) == null &&
 			rigid.move_and_collide(Vector2(0,-.1), true) == null &&
 			rigid.move_and_collide(Vector2(.1,0), true) == null && 
@@ -251,100 +250,90 @@ func _handle_physics():
 			rigid.move_and_collide(Vector2(.1,-.1), true) == null &&
 			rigid.move_and_collide(Vector2(-.1,-.1), true) == null && 
 			rigid.move_and_collide(Vector2(-.1,.1), true) == null):
-		
-			var modu = holding.Modulate
-			modu.R = 1
-			modu.B = 1
-			modu.G = 1
-			modu.A = 0.5
-			holding.Modulate = modu
-		
+			holding.modulate = Color(1,1,1,0.5)
 		else:
+			holding.modulate = Color(1,0,0,0.5)
 		
-			var modu = holding.Modulate
-			modu.R = 1
-			modu.G = 0
-			modu.B = 0
-			modu.A = 0.5
-			holding.Modulate = modu
-		
-		rigid.SetCollisionMaskValue(3, false)
-		#rigid.SetCollisionMaskValue(4, false)
+		rigid.set_collision_mask_value(3, false)
+		#rigid.set_collision_mask_value(4, false)
 		# Place held object
-		if (is_interact && isHolding == true):
-		
-			rigid.SetCollisionMaskValue(3, true)
-			#rigid.SetCollisionMaskValue(4, true)
-			if (rigid.move_and_collide(Vector2(0,.1), true) == null &&
-				rigid.move_and_collide(Vector2(0,-.1), true) == null &&
-				rigid.move_and_collide(Vector2(.1,0), true) == null && 
-				rigid.move_and_collide(Vector2(-.1,0), true) == null &&
-				rigid.move_and_collide(Vector2(.1,.1), true) == null &&
-				rigid.move_and_collide(Vector2(.1,-.1), true) == null &&
-				rigid.move_and_collide(Vector2(-.1,-.1), true) == null && 
-				rigid.move_and_collide(Vector2(-.1,.1), true) == null):
+		if (is_interact && is_holding == true):
+			rigid.set_collision_mask_value(3, true)
+			#rigid.set_collision_mask_value(4, true)
+			if (rigid.move_and_collide(Vector2(0,0.1), true) == null &&
+				rigid.move_and_collide(Vector2(0,-0.1), true) == null &&
+				rigid.move_and_collide(Vector2(0.1,0), true) == null && 
+				rigid.move_and_collide(Vector2(-0.1,0), true) == null &&
+				rigid.move_and_collide(Vector2(0.1,0.1), true) == null &&
+				rigid.move_and_collide(Vector2(0.1,-0.1), true) == null &&
+				rigid.move_and_collide(Vector2(-0.1,-0.1), true) == null && 
+				rigid.move_and_collide(Vector2(-0.1,0.1), true) == null):
 			
-				if(holding.GetMeta("Static") == false):
-					rigid.Freeze = false
+				if(holding.is_static == false):
+					rigid.freeze = false
 					rigid.linear_velocity = linear_velocity
-				
 				else:
-				
 					rigid.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
-				
+				#holding.reparent(get_tree().get_first_node_in_group("ObjectHolder"), true)
 				holding.isHeld = false
-				isHolding = false
+				is_holding = false
 				holding = null
 				PlayPopSound()
-				pigArm.QueueFree()
-				pigArm = null
+				arm_slot.hide()
 			
-			rigid.SetCollisionMaskValue(3, false)
-			#rigid.SetCollisionMaskValue(4, false)
-		
+			rigid.set_collision_mask_value(3, false)
+			#rigid.set_collision_mask_value(4, false)
 		else:
-			isHolding = true
-	
-	else:
-	
-		mySprite.animation = "normal"
+			is_holding = true
+
 	
 
-
+@rpc("any_peer", "call_local")
 func SpawnObject(path : String) -> bool:
-
-	if(holding!=null):
-		return false
-		
-	var ps = load(path)
-	var inst = ps.instantiate()
-	get_tree().root.add_child(inst)
-	var rigid = inst.GetNode<RigidBody2D>("RigidBody2D")
-	inst.AddToGroup("PhysicsObjects", false)
-	rigid.SetCollisionLayerValue(1, false)
-	rigid.SetCollisionMaskValue(2, false)
-	rigid.Freeze = true
-	holding = inst
+	#We want holding to be null. If it's not null then it'll try to make Rufus hold two objects
+	#object_spawner.add_spawnable_scene(path)
 	
+	if(not is_multiplayer_authority()):
+		return false
+	if(is_holding):
+		print("is_holding")
+		return false
+	
+	
+	#get the packed scene from the provided path
+	var ps = load(path)
+	#instantiate the packed scene
+	var inst : PlacableObject = ps.instantiate()
+	#add the scene to the tree
+	GameManager.object_holder.add_child(inst, true)
+	#arm_slot.move_child(inst, 0)
+	#get the rigidbody of the spawned placable object
+	#add it to the physics objects group
+	#inst.add_to_group("PhysicsObjects", false)
+	#make it so it doesn't collide with anything
+	inst.set_collision_layer_value(1, false)
+	inst.set_collision_mask_value(2, false)
+	#turn off physics
+	inst.freeze = true
+	#Tell Rufus he's holding the unpacked placable object
+	holding = inst
+	#tell the placable object it's being held
 	holding.isHeld = true
-	ps = load("res:#Scenes/pig_hold_arm.tscn")
-	inst = ps.instantiate()
-	inst.AddToGroup("PhysicsObjects", false)
-	get_tree().root.add_child(inst)
-	pigArm = inst
-	# Handle pig arm position
-	pigArm.global_position = global_position
+	
+	#change original packed scene to a pig arm and instantiate it
+	
 	# Get direction to mouse
-	var dir = global_position.direction_to(get_global_mouse_position())
-	var mag = holding.GetMeta("HoldOffset")
+	var dir = global_position.direction_to(mouse_position)
+	var mag = holding.hold_offset
 	# Set object held position
-	if (get_global_mouse_position().distance_to(global_position) < mag):
-		holding.global_position = get_global_mouse_position()
+	if (mouse_position.distance_to(global_position) < mag):
+		holding.global_position = mouse_position
 	else:
 		holding.global_position = Vector2(
 			global_position.x + dir.x * mag,
 			global_position.y + dir.y * mag
 		)
+	is_holding = true
 	return true
 
 func PlayStepSound():
@@ -378,9 +367,6 @@ func ThinkShifyThoughts(isShify : bool):
 
 func Despawn():
 
-	if(pigArm!=null):
-		pigArm.queue_free()
-	
 	if (holding != null):
 		holding.queue_free()
 	
@@ -388,6 +374,6 @@ func Despawn():
 	#var rufusRag = rufusRagPS.instantiate()
 	#rufusRag.global_position = global_position
 	#get_tree().root.add_child(rufusRag)
-	#rufusRag.get_node("Sprite2D").FlipH = mySprite.FlipH
+	#rufusRag.get_node("Sprite2D").flip_h = mySprite.flip_h
 	GameManager.Rufuses.erase(self)
 	queue_free()

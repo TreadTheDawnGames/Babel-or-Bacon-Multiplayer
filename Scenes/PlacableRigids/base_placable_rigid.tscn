@@ -1,7 +1,34 @@
-[gd_scene format=3 uid="uid://o1lfvb5hnx3f"]
+[gd_scene load_steps=4 format=3 uid="uid://o1lfvb5hnx3f"]
+
+[ext_resource type="Script" uid="uid://bbbs0icyhif7g" path="res://Scripts/placable_object.gd" id="1_evrrg"]
+[ext_resource type="Script" uid="uid://ds07w4angr4si" path="res://Scripts/multiplayer/physics_synchronizer.gd" id="2_pddyc"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ex5tu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:modulate")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:collision_layer")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:collision_mask")
+properties/4/spawn = true
+properties/4/replication_mode = 2
 
 [node name="BasePlacableRigid" type="RigidBody2D"]
+collision_layer = 5
+collision_mask = 3
+script = ExtResource("1_evrrg")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ex5tu")
+script = ExtResource("2_pddyc")

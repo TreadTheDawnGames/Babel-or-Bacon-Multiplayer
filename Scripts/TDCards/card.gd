@@ -25,7 +25,7 @@ var _OGMask : int
 
 var _PlayZone : TDCardPlayArea = null
 
-var _Played : bool
+var Played : bool
 
 @export var _IsDragDropable : bool = true
 @export var _IsActionUsable : bool = true
@@ -62,11 +62,11 @@ func SetGrabbable(canGrab : bool) -> void:
 ##A private function that calls the Preplay, PlayCard, and Postplay functions for the Data if it is not null
 func _PlayCard() -> void:
 	if(_PlayZone && Data):
-		if(grabbed && usable && not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && not _Played):
+		if(grabbed && usable && not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && not Played):
 			usable = false
 			Data.Preplay(_PlayZone, self)
 			Data.PlayCard(_PlayZone, self)
-			_Played = true
+			#_Played = true
 			Data.Postplay(_PlayZone, self)
 	return
 

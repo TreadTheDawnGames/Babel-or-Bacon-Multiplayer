@@ -9,7 +9,6 @@ size = Vector2(164, 240)
 
 [node name="CardBase" type="Area2D"]
 script = ExtResource("1_vqkj3")
-ManualSetup = true
 metadata/_custom_type_script = "uid://bh6e3b60erm74"
 
 [node name="Background" type="Sprite2D" parent="."]

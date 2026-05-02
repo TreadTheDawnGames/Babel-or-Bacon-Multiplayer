@@ -17,7 +17,7 @@ size = Vector2(4255, 300)
 [node name="level" type="Node2D" groups=["Level"]]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://b5qtaojl1eweb", "uid://d1bs0fei3dl5j")
+_spawnable_scenes = PackedStringArray("uid://b5qtaojl1eweb")
 spawn_path = NodePath("../Rufuses")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
@@ -47,13 +47,13 @@ shape = SubResource("RectangleShape2D_k5f4k")
 mouse_filter = 2
 
 [node name="CardBoard" parent="CanvasLayer" instance=ExtResource("4_wqkje")]
+visible = false
 
-[node name="Rufuses" type="Node2D" parent="." groups=["RufusesHolder"]]
-position = Vector2(533, -97)
+[node name="Rufuses" type="Node2D" parent="."]
 
 [node name="PlacedObjects" type="Node2D" parent="." groups=["ObjectHolder"]]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="PlacedObjects" groups=["PlacedObjectSpawner"]]
+[node name="RigidSpawner" type="MultiplayerSpawner" parent="PlacedObjects" groups=["PlacedObjectSpawner"]]
 spawn_path = NodePath("..")
 
 [node name="Crate_PlacableRigid" parent="PlacedObjects" instance=ExtResource("5_wqkje")]

@@ -62,6 +62,7 @@ func _process(_delta):
 			if (rufus.global_position.y < maxCamHeight):
 				maxCamHeight = rufus.global_position.y
 				@warning_ignore("integer_division")
+				@warning_ignore("narrowing_conversion")
 				GameManager.loseHeight = global_position.y + 1080 / 2 + 35
 		
 		#if (Input.is_action_just_released("SlowScrollDown")):

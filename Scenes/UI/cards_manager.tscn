@@ -1,26 +1,17 @@
-[gd_scene load_steps=10 format=3 uid="uid://cucvnpr1xfr62"]
+[gd_scene load_steps=7 format=3 uid="uid://cucvnpr1xfr62"]
 
 [ext_resource type="Script" uid="uid://b4bpy0lvl2wxu" path="res://Scripts/Player/RufusCardBoard.gd" id="1_egawd"]
 [ext_resource type="Script" uid="uid://b6sx7ipqslu7a" path="res://Scripts/TDCards/card_goto_marker.gd" id="2_jkgca"]
 [ext_resource type="Script" uid="uid://oxfwwo7wfsu4" path="res://Scripts/TDCards/card_play_area.gd" id="3_3pcd6"]
 [ext_resource type="PackedScene" uid="uid://b0t5kh500k8je" path="res://Scenes/UI/card.tscn" id="4_374m0"]
-[ext_resource type="PackedScene" uid="uid://dyo4b07qyoqot" path="res://Scenes/PlacableRigids/Objects/crate.tscn" id="5_egawd"]
-[ext_resource type="Script" uid="uid://b85v7ihdo7yol" path="res://Scripts/CardData/placable_object_card_data.gd" id="6_7mpbo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_374m0"]
 size = Vector2(1762, 677)
 
-[sub_resource type="Resource" id="Resource_yds2l"]
-script = ExtResource("6_7mpbo")
-OBJ_SCENE = ExtResource("5_egawd")
-metadata/_custom_type_script = "uid://b85v7ihdo7yol"
+[sub_resource type="LabelSettings" id="LabelSettings_374m0"]
+font_size = 91
 
-[sub_resource type="Resource" id="Resource_7ing4"]
-script = ExtResource("6_7mpbo")
-OBJ_SCENE = ExtResource("5_egawd")
-metadata/_custom_type_script = "uid://b85v7ihdo7yol"
-
-[node name="CardBoard" type="Control"]
+[node name="CardBoard" type="Control" node_paths=PackedStringArray("card_markers")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,6 +20,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_egawd")
+card_markers = [NodePath("Hand/TDCardPositionMarker2D"), NodePath("Hand/TDCardPositionMarker2D2"), NodePath("Hand/TDCardPositionMarker2D3"), NodePath("Hand/TDCardPositionMarker2D4"), NodePath("Hand/TDCardPositionMarker2D5")]
+cardSceneSource = ExtResource("4_374m0")
 
 [node name="Hand" type="Node2D" parent="."]
 position = Vector2(900, 60)
@@ -67,12 +60,11 @@ metadata/_custom_type_script = "uid://oxfwwo7wfsu4"
 position = Vector2(0, 94.5)
 shape = SubResource("RectangleShape2D_374m0")
 
-[node name="CardBase" parent="." node_paths=PackedStringArray("LocationMarker") instance=ExtResource("4_374m0")]
-position = Vector2(1064, 60)
-LocationMarker = NodePath("../Hand/TDCardPositionMarker2D")
-Data = SubResource("Resource_yds2l")
-
-[node name="CardBase2" parent="." node_paths=PackedStringArray("LocationMarker") instance=ExtResource("4_374m0")]
-position = Vector2(726, 55)
-LocationMarker = NodePath("../Hand/TDCardPositionMarker2D2")
-Data = SubResource("Resource_7ing4")
+[node name="MyRufusLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 104.0
+offset_right = 586.0
+offset_bottom = 285.0
+text = "myrufus"
+label_settings = SubResource("LabelSettings_374m0")
