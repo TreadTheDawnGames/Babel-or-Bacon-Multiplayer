@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://o1lfvb5hnx3f"]
+[gd_scene format=3 uid="uid://o1lfvb5hnx3f"]
 
 [ext_resource type="Script" uid="uid://bbbs0icyhif7g" path="res://Scripts/placable_object.gd" id="1_evrrg"]
 [ext_resource type="Script" uid="uid://ds07w4angr4si" path="res://Scripts/multiplayer/physics_synchronizer.gd" id="2_pddyc"]
@@ -20,15 +20,15 @@ properties/4/path = NodePath(".:collision_mask")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[node name="BasePlacableRigid" type="RigidBody2D"]
+[node name="BasePlacableRigid" type="RigidBody2D" unique_id=201040134]
 collision_layer = 5
 collision_mask = 3
 script = ExtResource("1_evrrg")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=708813263]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1142634498]
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1030514521]
 replication_config = SubResource("SceneReplicationConfig_ex5tu")
 script = ExtResource("2_pddyc")

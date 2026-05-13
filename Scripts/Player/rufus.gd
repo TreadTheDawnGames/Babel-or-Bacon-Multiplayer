@@ -57,12 +57,13 @@ var rotate_left : bool = false
 var rotate_right : bool = false
 var open_shop : bool = false
 var mouse_position : Vector2
+var mouse_direction : Vector2
 
 @export var anim_velo : float = false
 @export var jc1 : bool = false
 @export var jc2 : bool = false
 
-@onready var input_syncronizer: MultiplayerSynchronizer = $InputSyncronizer
+@onready var input_syncronizer: RufusInputSynchronizer = $InputSyncronizer
 
 @export var player_id := 1:
 	set(id):
@@ -79,6 +80,7 @@ func _handle_player_input():
 	rotate_right = input_syncronizer.rotate_right
 	open_shop = input_syncronizer.open_shop
 	mouse_position = input_syncronizer.mouse_position
+	mouse_direction = input_syncronizer.mouse_direction
 
 func _physics_process(_delta: float) -> void:
 	
@@ -137,17 +139,28 @@ func _handle_animation():
 		mySprite.animation = "carry"
 		arm_slot.show()
 		
-		if (mouse_position.x > global_position.x):
-		# Set facing sprite
+		if mouse_direction.x > 0:
 			mySprite.flip_h = false
 			pig_arm.get_node("PigArm").flip_h = false
-			pig_arm.look_at(mouse_position)
-		
-		if (mouse_position.x < global_position.x):
+			pig_arm.rotation = mouse_direction.angle()
+		if mouse_direction.x < 0:
 			mySprite.flip_h = true
 			pig_arm.get_node("PigArm").flip_h = true
-			pig_arm.look_at(mouse_position)
+			pig_arm.rotation = mouse_direction.angle()
 			pig_arm.rotation += PI
+
+		
+		#if (mouse_position.x > global_position.x):
+		## Set facing sprite
+			#mySprite.flip_h = false
+			#pig_arm.get_node("PigArm").flip_h = false
+			#pig_arm.look_at(mouse_position)
+		#
+		#if (mouse_position.x < global_position.x):
+			#mySprite.flip_h = true
+			#pig_arm.get_node("PigArm").flip_h = true
+			#pig_arm.look_at(mouse_position)
+			#pig_arm.rotation += PI
 	else:
 		mySprite.animation = "normal"
 		arm_slot.hide()
@@ -221,19 +234,25 @@ func _handle_physics():
 
 func handle_holding_object():
 	if (is_holding):
-		var rigid : RigidBody2D = holding as RigidBody2D
+		if holding is not PlacableObject:
+			push_error("Holding an object that is not a PlacableObject.")
+			return
+		var rigid : PlacableObject = holding as PlacableObject
 		# Get direction to mouse
-		var dir = global_position.direction_to(mouse_position)
-		var mag = holding.hold_offset
+		#var dir = global_position.direction_to(mouse_position)
+		var dir =input_syncronizer.mouse_direction
+		var maxMag = holding.hold_offset
 
 			# Set object held position
-		if (mouse_position.distance_to(global_position) < mag):
-			holding.global_position = mouse_position
-		else:
-			holding.global_position = Vector2(
-				global_position.x + dir.x * mag,
-				global_position.y + dir.y * mag
-			)
+		#if (mouse_position.distance_to(global_position) < maxMag):
+			#holding.global_position = mouse_position
+		#else:
+			#holding.global_position = Vector2(
+				#global_position.x + dir.x * maxMag,
+				#global_position.y + dir.y * maxMag
+			#)
+			
+		holding.global_position = global_position+(dir*maxMag)
 		
 		# Rotate held object
 		if (rotate_left):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://b5qtaojl1eweb"]
+[gd_scene format=3 uid="uid://b5qtaojl1eweb"]
 
 [ext_resource type="Script" uid="uid://b2xifo5l8edkp" path="res://Scripts/Player/rufus.gd" id="1_uhqbe"]
 [ext_resource type="Texture2D" uid="uid://df44ha7ckulwq" path="res://Assets/Sprites/Rufus/PigCarry1.png" id="2_hg50a"]
@@ -166,7 +166,7 @@ animations = [{
 "speed": 4.0
 }]
 
-[node name="Rufus" type="RigidBody2D"]
+[node name="Rufus" type="RigidBody2D" unique_id=1215599476]
 process_mode = 1
 collision_layer = 34
 collision_mask = 3
@@ -177,15 +177,15 @@ script = ExtResource("1_uhqbe")
 airspd = 4000.0
 grndspd = 11110.0
 
-[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1916783021]
 replication_config = SubResource("SceneReplicationConfig_l8r2c")
 
-[node name="InputSyncronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="InputSyncronizer" type="MultiplayerSynchronizer" parent="." unique_id=1775001119]
 unique_name_in_owner = true
 replication_config = SubResource("SceneReplicationConfig_uhqbe")
 script = ExtResource("2_l8r2c")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=494419227]
 position = Vector2(0, -3)
 sprite_frames = SubResource("SpriteFrames_bqtgq")
 animation = &"normal"
@@ -193,25 +193,25 @@ autoplay = "normal"
 centered = false
 offset = Vector2(-50, -60)
 
-[node name="BeanShape" type="CollisionShape2D" parent="."]
+[node name="BeanShape" type="CollisionShape2D" parent="." unique_id=716237508]
 shape = SubResource("CapsuleShape2D_qvtxl")
 
-[node name="StandingShape" type="CollisionShape2D" parent="."]
+[node name="StandingShape" type="CollisionShape2D" parent="." unique_id=94994835]
 position = Vector2(0, -46)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_l8r2c")
 
-[node name="HoleFillShape" type="CollisionShape2D" parent="."]
+[node name="HoleFillShape" type="CollisionShape2D" parent="." unique_id=41092527]
 position = Vector2(0, -28)
 shape = SubResource("RectangleShape2D_38qne")
 
-[node name="StepSoundPlayer" type="AudioStreamPlayer" parent="."]
+[node name="StepSoundPlayer" type="AudioStreamPlayer" parent="." unique_id=464957204]
 volume_db = -20.07
 
-[node name="PopSoundPlayer" type="AudioStreamPlayer" parent="."]
+[node name="PopSoundPlayer" type="AudioStreamPlayer" parent="." unique_id=1950492749]
 volume_db = -20.07
 
-[node name="ShiftyThoughts" type="AnimatedSprite2D" parent="."]
+[node name="ShiftyThoughts" type="AnimatedSprite2D" parent="." unique_id=1826290747]
 z_index = 2
 position = Vector2(-2, -74)
 scale = Vector2(0.5, 0.5)
@@ -219,7 +219,7 @@ sprite_frames = SubResource("SpriteFrames_w28bs")
 autoplay = "default"
 frame_progress = 0.70973
 
-[node name="ArmSlot" type="Node2D" parent="."]
+[node name="ArmSlot" type="Node2D" parent="." unique_id=452550605]
 visible = false
 
-[node name="PigHoldArm" parent="ArmSlot" instance=ExtResource("15_38qne")]
+[node name="PigHoldArm" parent="ArmSlot" unique_id=1682104542 instance=ExtResource("15_38qne")]

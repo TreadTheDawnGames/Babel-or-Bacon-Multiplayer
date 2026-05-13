@@ -1,4 +1,5 @@
 extends MultiplayerSynchronizer
+class_name RufusInputSynchronizer
 
 var end_jump : bool = false
 var start_jump : bool = false
@@ -9,7 +10,9 @@ var rotate_left : bool = false
 var rotate_right : bool = false
 var open_shop : bool = false
 var mouse_position : Vector2
+var mouse_direction : Vector2
 
+var rufus : PlayerCharacter
 
 func _ready():
 	if(get_multiplayer_authority() != multiplayer.get_unique_id()):
@@ -25,6 +28,8 @@ func _ready():
 	rotate_right = Input.is_action_pressed("rotate_right")
 	open_shop = Input.is_action_just_pressed("open_shop")
 	mouse_position = get_parent().get_global_mouse_position()
+	rufus = get_parent()
+	mouse_direction = Vector2(Input.get_axis("mouse_direction-LEFT", "mouse_direction-RIGHT"), Input.get_axis("mouse_direction-UP", "mouse_direction-DOWN"))
 	pass
 
 func _physics_process(_delta: float) -> void:
@@ -37,4 +42,7 @@ func _physics_process(_delta: float) -> void:
 	rotate_right = Input.is_action_pressed("rotate_right")
 	open_shop = Input.is_action_just_pressed("open_shop")
 	mouse_position = get_parent().get_global_mouse_position()
+	mouse_direction = Vector2(Input.get_axis("mouse_direction-LEFT", "mouse_direction-RIGHT"), Input.get_axis("mouse_direction-UP", "mouse_direction-DOWN"))
+
+
 	pass
